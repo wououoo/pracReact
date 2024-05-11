@@ -51,6 +51,26 @@
     })
     --> 배열 안에 값이 세개 있으므로 세번 반복(배열 안의 값이 12312312321이걸로 대체됨)
 
+styled-component
+import styled from 'styled-components';
+
+장점
+  1. css 파일을 안열어도 된다
+  2. 스타일이 다른 js파일로 오염되지 않는다
+  3. 페이지 로딩시간 단축
+
+단점
+  1. JS 파일이 복잡해짐
+  2. 중복 스타일은 컴포넌트간 IMPORT할텐데 CSS와 다른게 없음
+
+** 이거 안쓰고 오염 방지하려면 CSS파일 제목을 컴포넌트.module.css 로 작명
+  삼항연산자 그런거 다 가능
+  let NewBtn = styled.button(YellowBtn)``   --> 이런 식으로 기존 스타일 복사 가능
+
+
+
+    
+
   동적인 UI만드는 step
     1. html css로 미리 디자인 완성
     2. UI의 현재 상태를 state로 저장
