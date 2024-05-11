@@ -6,7 +6,24 @@ import bg from './img/Capture001.png';
 import data from './data.js'
 import { Routes, Route, Link, useNavigate, Outlet } from 'react-router-dom'
 import Detail from './routes/Detail.js'
+import styled from 'styled-components';
 
+// styled-component 장점
+/*
+  1. css 파일을 안열어도 된다
+  2. 스타일이 다른 js파일로 오염되지 않는다
+  3. 페이지 로딩시간 단축
+
+  ** 이거 안쓰고 오염 방지하려면 CSS파일 제목을 컴포넌트.module.css 로 작명
+  삼항연산자 그런거 다 가능
+  let NewBtn = styled.button(YellowBtn)``   --> 이런 식으로 기존 스타일 복사 가능
+  */
+
+let YellowBtn = styled.button `
+  background : ${props => props.bg};   
+  color: black;
+  padding : 10px;
+`
 
 
 // html 에서 public폴더 이미지를 사용할 경우에는 그냥 /이미지경로
@@ -42,6 +59,7 @@ function App() {
             <div>
               <div className ="main-bg" style = {{backgroundImage : 'url(' + bg + ')' }}></div>
               <div className = "container">
+                <YellowBtn bg="blue">버튼 </YellowBtn> 
                 <div className = "row">
                   {
                     shoes.map((a,i)=>{
