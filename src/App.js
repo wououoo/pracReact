@@ -7,6 +7,11 @@ import data from './data.js'
 import { Routes, Route, Link, useNavigate, Outlet } from 'react-router-dom'
 import Detail from './routes/Detail.js'
 import styled from 'styled-components';
+import React, { createContext } from 'react';
+// import axios from 'axios'
+import Cart from './routes/Cart.js'
+
+
 
 // styled-component 장점
 /*
@@ -33,7 +38,21 @@ let YellowBtn = styled.button `
 // public 파일의 사용  권장방법은 src= {process.env.PUBLIC_URL + '/파일이름'} --> 이거임
 // nested routes-- > 여러 유사한 페이지가 필요할 때 사용(뭐 하나하나 박스만 바뀌는 경우)
 
+/*
+  single page application의 단점
+  1. 컴포넌트간 state 공유가 어렵다
+  2. 
+*/
+
+
+
 function App() {
+
+
+// createContext를 사용하여 컨텍스트 생성
+const Context1 = createContext();
+
+
 
   let [shoes] = useState(data);
   useNavigate(); // 훅 : 유용한 정보들이 들어있는 함수 ->  페이지 이동 도와줌(useNavigate)
@@ -74,17 +93,15 @@ function App() {
           }/>
           <Route path = "/detail/:id" element={<Detail shoes={shoes}/>}/> 
 
-
+          <Route path = "/cart" element={
+              <Cart/>
+          }/> 
           
           <Route path="/about" element={ <About/> } >  
             <Route path="member" element={ <div>멤버들</div> } />
             <Route path="location" element={ <div>회사위치</div> } />
           </Route>
 
-          <Route path="/event" element={ <Event/> } >  
-            <Route path="one" element={ <div>첫 주문 시 양배추즙 서비스</div> } />
-            <Route path="two" element={ <div>생일기념 쿠폰받기</div> } />
-          </Route>
           
       </Routes>
 
