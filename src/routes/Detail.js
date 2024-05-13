@@ -3,6 +3,8 @@ import { useParams } from "react-router-dom";
 import styled from "styled-components";
 import Nav from 'react-bootstrap/Nav';
 // import {Context1} from './../App.js'
+import {addItem} from "./../store"
+import { useDispatch } from "react-redux";
 
 // styled-conponents를 쓰지않고 오염을 방지하려면 컴포넌트.module.css로 작명
 // 스타일이 다른 js 파일로 오염되지 않는다 --> styled-conponents 장점
@@ -55,7 +57,7 @@ function Detail(props){
       }
     })
 
-
+    let dispatch = useDispatch()
 
     /*
     즉 useEffect는
@@ -120,7 +122,9 @@ function Detail(props){
             <h4 className="pt-5">{찾은상품.title}</h4>
             <p>{찾은상품.content}</p>
             <p>{찾은상품.price}</p>
-            <button className="btn btn-danger">주문하기</button> 
+            <button className="btn btn-danger" onClick = {()=>{
+              dispatch(addItem({}))
+            }}>주문하기</button> 
           </div>
         </div>
 

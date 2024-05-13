@@ -44,6 +44,29 @@ let YellowBtn = styled.button `
   2. 
 */
 
+/*
+  redux 쓰는 이유
+  1. 컴포넌트간 state 이동이 매우 편함
+*/
+/*
+  Local storage 사용(개발자도구 -> application)
+  1. 문자데이터만 가능
+  2. 5mb까지 문자만 저장가능
+  3. 사이트에 재 접속해도 남아있음(브라우저 청소시 삭제)
+
+  localStorage.setItem('age', '20')     // 저장
+  localStorage.getItem('age')           // 불러오기
+  localStorage.removeItem('age')        // 삭제
+  수정하는 문법은 없음
+  session storage 이것도 동일
+  array/object는 저장불가
+  그러나 json형태로 바꾸면 저장 가능
+  단점 : 꺼내도 JSON형태로 나오므로 다시 바꿔줘야 함
+
+  session storage
+  --> 브라우저 끄면 날라감
+*/
+
 
 
 function App() {
@@ -52,12 +75,13 @@ function App() {
 // createContext를 사용하여 컨텍스트 생성
 const Context1 = createContext();
 
-
-
   let [shoes] = useState(data);
   useNavigate(); // 훅 : 유용한 정보들이 들어있는 함수 ->  페이지 이동 도와줌(useNavigate)
   let navigate = useNavigate();
-
+  // let obj = {name : 'kim'}
+  // localStorage.setItem('data', JSON.stringify(obj))
+  // let 꺼낸거 = localStorage.getItem('data')
+  // console.log(JSON.parse(꺼낸거).name)
 
   return (
 
