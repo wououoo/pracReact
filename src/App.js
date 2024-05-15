@@ -1,15 +1,21 @@
 import {Button, Navbar, Container, Nav } from 'react-bootstrap';
-import {useState} from "react"
+import {lazy, Suspense, useEffect, useState} from "react"
 import logo from './logo.svg';
 import './App.css';
 import bg from './img/Capture001.png';
 import data from './data.js'
 import { Routes, Route, Link, useNavigate, Outlet } from 'react-router-dom'
-import Detail from './routes/Detail.js'
+// import Detail from './routes/Detail.js'
 import styled from 'styled-components';
 import React, { createContext } from 'react';
-// import axios from 'axios'
-import Cart from './routes/Cart.js'
+import axios from 'axios'
+// import Cart from './routes/Cart.js'
+import { useQuery} from 'react-query';
+// 메인페이지 로드 시 필요 없는건 늦게 로드하여 성능 향상
+// 사이트 발행할 때도 별도의 js 파일로 분리가 된다
+// 단점: cart, detail 페이지 이동 시 로딩시간 발생
+const Detail = lazy(()=>{ import('./routes/Detail.js')})
+const Cart = lazy(()=>{ import('./routes/Cart.js')})
 
 
 
@@ -61,15 +67,45 @@ let YellowBtn = styled.button `
   session storage 이것도 동일
   array/object는 저장불가
   그러나 json형태로 바꾸면 저장 가능
-  단점 : 꺼내도 JSON형태로 나오므로 다시 바꿔줘야 함
+  단점 : 꺼내도 JSON형태로 나오므로  다시 바꿔줘야 함
 
   session storage
   --> 브라우저 끄면 날라감
 */
 
+/*
+react query: 실시간 데이터를 계속 가져와야 하는 사이트들이 쓰면 좋음(코인거래소 등)
+ 장점
+ 1. state를 만들지 않아도 된다
+ 2. 자동으로 refetch해줌(staleTime : 2000, 이런식으로 시간설정 가능)(계속 정보를 가져옴)
+ 3. 실패했을 때 RETRY를 알아서 해준다
+ 4. state 공유를 안해도 된다
+ 5. ajax 결과 캐싱기능(기억한다) 
+*/
+
+/*
+ spa의 특징
+ 1. 발행하면 js파일 하나에 모든 코드를 다 쑤셔넣는다
+  -- > 로딩이 느림
+ 
+*/
+
+/*
+  꼭 필요할 때만 재랜더링 하려면 memo  -> cart.js파일 참고
+  원리(props가 변할 때만 재랜더링 해준다)
+  props가 길고 복잡하면 손해일 수도 있음
+
+  useMemo 사용법
+ */
+
 
 
 function App() {
+
+  useEffect(()=>{
+    if(localStorage.getItem('watched') != ''){}
+    localStorage.setItem('watched', JSON.stringify([]))
+  },[])
 
 
 // createContext를 사용하여 컨텍스트 생성
@@ -82,6 +118,19 @@ const Context1 = createContext();
   // localStorage.setItem('data', JSON.stringify(obj))
   // let 꺼낸거 = localStorage.getItem('data')
   // console.log(JSON.parse(꺼낸거).name)
+ 
+  
+  let result = useQuery('작명', ()=>
+    axios.get('https://codingapple1.github.io/userdata.json')
+    .then((a)=>{ return a.data  
+    }),
+    { staleTime : 2000} //
+  
+  )
+  
+  
+
+
 
   return (
 
@@ -94,6 +143,11 @@ const Context1 = createContext();
             <Nav.Link onClick={()=>{ navigate('/') }}>Home</Nav.Link>
             <Nav.Link onClick={()=>{ navigate('/detail') }}>Detail</Nav.Link>
           </Nav>
+          <Nav className='ms-auto'>
+            {result.isLoading && '로딩중'}
+            {result.error && '에러남'}
+            {result.data && result.data.name}
+            </Nav>
         </Container>
       </Navbar>
 
@@ -115,7 +169,11 @@ const Context1 = createContext();
               </div>
             </div>
           }/>
-          <Route path = "/detail/:id" element={<Detail shoes={shoes}/>}/> 
+          <Route path = "/detail/:id" element={
+            <Suspense fallback ={<div>로딩중임</div>}>  
+              <Detail shoes={shoes}/>
+          </Suspense>
+          }/> 
 
           <Route path = "/cart" element={
               <Cart/>
